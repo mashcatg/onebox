@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneBox - Connect All Your Email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #0a0a0a;
+            --card: #ffffff;
+            --card-foreground: #0a0a0a;
+            --primary: #5e17eb;
+            --primary-foreground: #ffffff;
+            --secondary: #f5f5f7;
+            --muted: #fafafa;
+            --muted-foreground: #6b7280;
+            --accent: #f3f4f6;
+            --border: #e5e7eb;
+            --font-sans: 'Plus Jakarta Sans', ui-sans-serif, sans-serif, system-ui;
+        }
+
+        .dark {
+            --background: #0a0a0a;
+            --foreground: #fafafa;
+            --card: #18181b;
+            --card-foreground: #fafafa;
+            --primary: #7c3aed;
+            --secondary: #1f1f23;
+            --muted: #18181b;
+            --muted-foreground: #9ca3af;
+            --accent: #27272a;
+            --border: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--background);
+            color: var(--foreground);
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .dark nav {
+            background: rgba(10, 10, 10, 0.8);
+        }
+
+        nav.scrolled {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-bottom-color: var(--border);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--foreground);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+
+        .nav-cta {
+            padding: 0.65rem 1.5rem;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(94, 23, 235, 0.3);
+        }
+
+        /* Mobile Menu */
+        .mobile-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--foreground);
+        }
+
+        .hero-text h1 .highlight {
+            color: var(--primary);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            color: var(--muted-foreground);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .hero-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        .hero-feature-item i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .cta-primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(94, 23, 235, 0.3);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: var(--foreground);
+            border-color: var(--border);
+        }
+
+        .cta-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+        }
+
+        .inbox-mockup {
+            position: absolute;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            animation: floatMockup 6s infinite ease-in-out;
+        }
+
+        .dark .inbox-mockup {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes floatMockup {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .mockup-1 {
+            width: 320px;
+            top: 0;
+            left: 0;
+            z-index: 3;
+        }
+
+        .mockup-2 {
+            width: 350px;
+            top: 120px;
+            right: 0;
+            z-index: 2;
+            animation-delay: 2s;
+        }
+
+        .mockup-3 {
+            width: 300px;
+            bottom: 0;
+            left: 50px;
+            z-index: 1;
+            animation-delay: 4s;
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mockup-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-foreground);
+            font-weight: 700;
+        }
+
+        .mockup-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .mockup-info p {
+            font-size: 0.8rem;
+            color: var(--muted-foreground);
+        }
+
+        .mockup-content {
+            font-size: 0.85rem;
+            color: var(--muted-foreground);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 5rem 2rem;
+            background: var(--muted);
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover .stat-icon {
+            transform: scale(1.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--muted-foreground);
+            font-weight: 600;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 8rem 2rem;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--foreground);
+        }
+
+        .section-title .highlight {
+            color: var(--primary);
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--muted-foreground);
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(94, 23, 235, 0.15);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--muted-foreground);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 8rem 2rem;
+            background: var(--muted);
+        }
+
+        .how-it-works-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step-card {
+            position: relative;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 auto 2rem;
+        }
+
+        .step-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            color: var(--muted-foreground);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Security Section */
+        .security {
+            padding: 8rem 2rem;
+        }
+
+        .security-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .security-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .security-visual {
+            position: relative;
+            height: 500px;
+            background: var(--secondary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+
+        .security-icon-large {
+            font-size: 8rem;
+            color: var(--primary);
+            opacity: 0.2;
+        }
+
+        .security-badge {
+            position: absolute;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .security-badge i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .badge-1 { top: 10%; left: -5%; }
+        .badge-2 { top: 50%; right: -5%; }
+        .badge-3 { bottom: 10%; left: 20%; }
+
+        .security-features {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .security-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .security-features li:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .security-features i {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .security-feature-content h4 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .security-feature-content p {
+            color: var(--muted-foreground);
+            font-size: 0.95rem;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 8rem 2rem;
+            background: var(--muted);
+        }
+
+        .testimonials-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .testimonial-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(94, 23, 235, 0.15);
+        }
+
+        .testimonial-rating {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--foreground);
+            margin-bottom: 2rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-foreground);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .author-info h4 {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+        }
+
+        /* Integration Section */
+        .integrations {
+            padding: 8rem 2rem;
+        }
+
+        .integrations-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .integration-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .integration-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(94, 23, 235, 0.15);
+        }
+
+        .integration-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .integration-card:hover .integration-icon {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            transform: scale(1.1);
+        }
+
+        .integration-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 8rem 2rem;
+            background: var(--muted);
+        }
+
+        .pricing-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .pricing-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            border-width: 2px;
+            transform: scale(1.03);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(94, 23, 235, 0.15);
+        }
+
+        .pricing-card.featured:hover {
+            transform: translateY(-5px) scale(1.03);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            right: 2rem;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .pricing-header h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-header p {
+            color: var(--muted-foreground);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-price span {
+            font-size: 1.25rem;
+            color: var(--muted-foreground);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--foreground);
+        }
+
+        .pricing-features i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(94, 23, 235, 0.3);
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 8rem 2rem;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-list {
+            margin-top: 4rem;
+        }
+
+        .faq-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            background: transparent;
+            border: none;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--foreground);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-sans);
+        }
+
+        .faq-question i {
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 2rem;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 2rem 1.5rem;
+        }
+
+        .faq-answer p {
+            color: var(--muted-foreground);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        .cta-section .cta-primary {
+            background: var(--primary-foreground);
+            color: var(--primary);
+        }
+
+        .cta-section .cta-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-about h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-about p {
+            color: var(--muted-foreground);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--foreground);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--muted-foreground);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-bottom-links a {
+            color: var(--muted-foreground);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-visual {
+                height: 400px;
+            }
+
+            .security-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .integrations-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .mockup-1, .mockup-2, .mockup-3 {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-inbox"></i>
+                OneBox
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="#" class="nav-cta">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Manage All Your <span class="highlight">Email Accounts</span> in One Place</h1>
+                <p class="hero-subtitle">Connect Gmail, Outlook, Yahoo, and more. Experience unified inbox management with advanced AI-powered features that save you hours every day.</p>
+                
+                <div class="hero-features">
+                    <div class="hero-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Connect unlimited email accounts</span>
+                    </div>
+                    <div class="hero-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>AI-powered smart filtering and sorting</span>
+                    </div>
+                    <div class="hero-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>End-to-end encryption for security</span>
+                    </div>
+                </div>
+
+                <div class="cta-group">
+                    <a href="#" class="cta-button cta-primary">
+                        Start Free Trial
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#" class="cta-button cta-secondary">
+                        <i class="fas fa-play-circle"></i>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="inbox-mockup mockup-1">
+                    <div class="mockup-header">
+                        <div class="mockup-avatar">JD</div>
+                        <div class="mockup-info">
+                            <h4>John Doe</h4>
+                            <p>Project Update</p>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        The quarterly review materials are ready for your review. Please find attached...
+                    </div>
+                </div>
+
+                <div class="inbox-mockup mockup-2">
+                    <div class="mockup-header">
+                        <div class="mockup-avatar">SM</div>
+                        <div class="mockup-info">
+                            <h4>Sarah Miller</h4>
+                            <p>Meeting Reminder</p>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        Don't forget our team sync at 3 PM today. We'll be discussing the new feature rollout...
+                    </div>
+                </div>
+
+                <div class="inbox-mockup mockup-3">
+                    <div class="mockup-header">
+                        <div class="mockup-avatar">TK</div>
+                        <div class="mockup-info">
+                            <h4>Tom Kingston</h4>
+                            <p>Invoice #2847</p>
+                        </div>
+                    </div>
+                    <div class="mockup-content">
+                        Thank you for your recent purchase. Your invoice is attached for your records...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="stat-number">2M+</span>
+                    <span class="stat-label">Active Users</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span class="stat-number">5B+</span>
+                    <span class="stat-label">Emails Managed</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <span class="stat-number">15hrs</span>
+                    <span class="stat-label">Saved Per Week</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span class="stat-number">4.9/5</span>
+                    <span class="stat-label">User Rating</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <i class="fas fa-bolt"></i>
+                    Features
+                </span>
+                <h2 class="section-title">Everything You Need for <span class="highlight">Email Success</span></h2>
+                <p class="section-description">Powerful features designed to streamline your email workflow and boost productivity.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3>Unified Inbox</h3>
+                    <p>Connect all your email accounts from Gmail, Outlook, Yahoo, iCloud, and more into one seamless inbox experience.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered Sorting</h3>
+                    <p>Smart algorithms automatically categorize and prioritize your emails, ensuring you never miss what's important.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Advanced Search</h3>
+                    <p>Find any email instantly with powerful search capabilities that understand natural language queries.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Calendar Integration</h3>
+                    <p>Seamlessly sync your calendars and schedule meetings directly from your inbox with one click.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Smart Notifications</h3>
+                    <p>Get notified only for emails that matter with intelligent notification filtering and scheduling.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Cross-Platform Sync</h3>
+                    <p>Access your emails from any device with real-time synchronization across desktop, mobile, and web.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="how-it-works-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <i class="fas fa-lightbulb"></i>
+                    Simple Process
+                </span>
+                <h2 class="section-title">Get Started in <span class="highlight">3 Easy Steps</span></h2>
+                <p class="section-description">Setting up OneBox takes less than 2 minutes. Here's how it works.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Create Your Account</h3>
+                    <p>Sign up with your email address and create a secure account in seconds. No credit card required for the free trial.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Connect Your Emails</h3>
+                    <p>Add all your email accounts with our secure OAuth integration. We support all major email providers.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Start Managing</h3>
+                    <p>Experience the power of unified inbox management with AI-powered features that work for you automatically.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="security">
+        <div class="security-container">
+            <div class="security-content">
+                <div>
+                    <span class="section-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Security First
+                    </span>
+                    <h2 class="section-title">Your Data is <span class="highlight">100% Secure</span></h2>
+                    <p class="section-description">We take security seriously. Your emails are encrypted end-to-end and we never access your data.</p>
+
+                    <ul class="security-features">
+                        <li>
+                            <i class="fas fa-lock"></i>
+                            <div class="security-feature-content">
+                                <h4>End-to-End Encryption</h4>
+                                <p>All your data is encrypted using military-grade AES-256 encryption both in transit and at rest.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-user-shield"></i>
+                            <div class="security-feature-content">
+                                <h4>Two-Factor Authentication</h4>
+                                <p>Add an extra layer of security to your account with 2FA support via SMS or authenticator apps.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-certificate"></i>
+                            <div class="security-feature-content">
+                                <h4>SOC 2 Compliance</h4>
+                                <p>We're fully compliant with industry standards including GDPR, SOC 2, and CCPA regulations.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-eye-slash"></i>
+                            <div class="security-feature-content">
+                                <h4>Zero-Knowledge Architecture</h4>
+                                <p>We can't access your emails even if we wanted to. Your privacy is guaranteed by design.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="security-visual">
+                    <i class="fas fa-shield-alt security-icon-large"></i>
+                    <div class="security-badge badge-1">
+                        <i class="fas fa-lock"></i>
+                        <span>256-bit Encryption</span>
+                    </div>
+                    <div class="security-badge badge-2">
+                        <i class="fas fa-check-circle"></i>
+                        <span>SOC 2 Certified</span>
+                    </div>
+                    <div class="security-badge badge-3">
+                        <i class="fas fa-user-lock"></i>
+                        <span>GDPR Compliant</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="testimonials-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <i class="fas fa-comments"></i>
+                    Testimonials
+                </span>
+                <h2 class="section-title">Loved by <span class="highlight">Thousands</span> Worldwide</h2>
+                <p class="section-description">See what our users have to say about their experience with OneBox.</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"OneBox has completely transformed how I manage my emails. I used to spend hours switching between accounts, now everything is in one place. The AI sorting is incredibly accurate!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MJ</div>
+                        <div class="author-info">
+                            <h4>Michael Johnson</h4>
+                            <p>CEO, TechStart Inc.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"As someone managing 5 different email accounts, OneBox is a lifesaver. The unified inbox and smart notifications mean I never miss important emails while avoiding distractions."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">EW</div>
+                        <div class="author-info">
+                            <h4>Emily Wilson</h4>
+                            <p>Marketing Director</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The security features give me peace of mind. Knowing my emails are encrypted end-to-end while still being easy to access from anywhere is exactly what I needed."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">DR</div>
+                        <div class="author-info">
+                            <h4>David Rodriguez</h4>
+                            <p>Freelance Developer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section class="integrations">
+        <div class="integrations-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <i class="fas fa-plug"></i>
+                    Integrations
+                </span>
+                <h2 class="section-title">Works With Your <span class="highlight">Favorite Tools</span></h2>
+                <p class="section-description">Connect OneBox with the apps you already use every day.</p>
+            </div>
+
+            <div class="integrations-grid">
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <h4>Gmail</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                    <h4>Outlook</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-yahoo"></i>
+                    </div>
+                    <h4>Yahoo</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-apple"></i>
+                    </div>
+                    <h4>iCloud</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-slack"></i>
+                    </div>
+                    <h4>Slack</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-trello"></i>
+                    </div>
+                    <h4>Trello</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-dropbox"></i>
+                    </div>
+                    <h4>Dropbox</h4>
+                </div>
+
+                <div class="integration-card">
+                    <div class="integration-icon">
+                        <i class="fab fa-google-drive"></i>
+                    </div>
+                    <h4>Drive</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <i class="fas fa-tag"></i>
+                    Pricing
+                </span>
+                <h2 class="section-title">Simple, <span class="highlight">Transparent Pricing</span></h2>
+                <p class="section-description">Choose the perfect plan for your needs. All plans include a 14-day free trial.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Starter</h3>
+                        <p>Perfect for personal use</p>
+                    </div>
+                    <div class="pricing-price">$0<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Connect up to 2 accounts</li>
+                        <li><i class="fas fa-check"></i> 1GB storage</li>
+                        <li><i class="fas fa-check"></i> Basic AI sorting</li>
+                        <li><i class="fas fa-check"></i> Mobile & desktop apps</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                    </ul>
+                    <button class="pricing-cta">Get Started Free</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3>Professional</h3>
+                        <p>For professionals & teams</p>
+                    </div>
+                    <div class="pricing-price">$12<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Connect unlimited accounts</li>
+                        <li><i class="fas fa-check"></i> 50GB storage</li>
+                        <li><i class="fas fa-check"></i> Advanced AI features</li>
+                        <li><i class="fas fa-check"></i> Calendar integration</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Custom filters</li>
+                    </ul>
+                    <button class="pricing-cta">Start Free Trial</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <p>For large organizations</p>
+                    </div>
+                    <div class="pricing-price">$49<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Everything in Professional</li>
+                        <li><i class="fas fa-check"></i> Unlimited storage</li>
+                        <li><i class="fas fa-check"></i> Advanced security</li>
+                        <li><i class="fas fa-check"></i> Team management</li>
+                        <li><i class="fas fa-check"></i> 24/7 phone support</li>
+                        <li><i class="fas fa-check"></i> Custom integrations</li>
+                    </ul>
+                    <button class="pricing-cta">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="faq-container">
+            <div class="section-header">
+                <span class="section-badge">
+                    <i class="fas fa-question-circle"></i>
+                    FAQ
+                </span>
+                <h2 class="section-title">Frequently Asked <span class="highlight">Questions</span></h2>
+                <p class="section-description">Everything you need to know about OneBox.</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How secure is OneBox?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>OneBox uses end-to-end encryption with AES-256 to protect your data. We're SOC 2 compliant and follow industry best practices. Your emails are never stored in plain text, and we use a zero-knowledge architecture, meaning even we cannot access your data.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I use OneBox on multiple devices?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! OneBox works seamlessly across all your devices. Install our apps on desktop, mobile, or access via web browser. All your data syncs in real-time across all platforms.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Which email providers do you support?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We support all major email providers including Gmail, Outlook, Yahoo, iCloud, ProtonMail, and any custom IMAP/SMTP email service. You can connect unlimited accounts on Professional and Enterprise plans.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Is there a free trial?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! All paid plans come with a 14-day free trial. No credit card required to start. You can also use our free Starter plan indefinitely with basic features.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can I cancel my subscription anytime?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! You can cancel your subscription at any time from your account settings. No questions asked, no cancellation fees. Your data remains accessible even after cancellation.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do you offer team or enterprise plans?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Our Enterprise plan includes team management features, advanced security options, dedicated support, and custom integrations. Contact our sales team for custom pricing and features tailored to your organization.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Email Experience?</h2>
+            <p>Join millions of users who have simplified their inbox management with OneBox. Start your free trial today.</p>
+            <a href="#" class="cta-button cta-primary">
+                Get Started for Free
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <h3>OneBox</h3>
+                    <p>The ultimate email management platform that brings all your accounts together in one powerful, secure inbox.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Roadmap</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 OneBox. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            html.classList.add('dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            
+            if (html.classList.contains('dark')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                if (isActive) {
+                    item.classList.remove('active');
+                } else {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    const navHeight = navbar.offsetHeight;
+                    const targetPosition = target.offsetTop - navHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.feature-card, .step-card, .testimonial-card, .integration-card, .pricing-card, .stat-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Counter animation for stats
+        const animateCounter = (element, target, duration = 2000) => {
+            let current = 0;
+            const increment = target / (duration / 16);
+            const suffix = element.textContent.replace(/[0-9.]/g, '');
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + suffix;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + suffix;
+                }
+            }, 16);
+        };
+
+        // Observe stats section for counter animation
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const text = stat.textContent;
+                        let target;
+                        
+                        if (text.includes('M')) {
+                            target = parseFloat(text) * 1000000;
+                        } else if (text.includes('B')) {
+                            target = parseFloat(text) * 1000000000;
+                        } else if (text.includes('hrs')) {
+                            target = parseInt(text);
+                        } else if (text.includes('/')) {
+                            // For ratings like 4.9/5
+                            return;
+                        } else {
+                            target = parseInt(text);
+                        }
+                        
+                        if (!isNaN(target)) {
+                            stat.textContent = '0' + text.replace(/[0-9.]/g, '');
+                            setTimeout(() => {
+                                if (text.includes('M')) {
+                                    animateCounter(stat, parseFloat(text.match(/[0-9.]+/)[0]), 2000);
+                                    stat.textContent = stat.textContent.replace(/[0-9.]+/, stat.textContent.match(/[0-9.]+/)[0]) + 'M+';
+                                } else if (text.includes('B')) {
+                                    animateCounter(stat, parseFloat(text.match(/[0-9.]+/)[0]), 2000);
+                                    stat.textContent = stat.textContent.replace(/[0-9.]+/, stat.textContent.match(/[0-9.]+/)[0]) + 'B+';
+                                } else if (text.includes('hrs')) {
+                                    animateCounter(stat, parseInt(text), 2000);
+                                    stat.textContent = stat.textContent.replace(/[0-9]+/, stat.textContent.match(/[0-9]+/)[0]) + 'hrs';
+                                }
+                            }, 100);
+                        }
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        // Add hover effect to CTA buttons
+        document.querySelectorAll('.cta-button, .pricing-cta').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-visual');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Pricing card click effect
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('pricing-cta')) {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                }
+            });
+        });
+
+        // Feature card interaction
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+
+        // Security badges float animation
+        const securityBadges = document.querySelectorAll('.security-badge');
+        securityBadges.forEach((badge, index) => {
+            setInterval(() => {
+                badge.style.transform = `translateY(${Math.sin(Date.now() / 1000 + index) * 10}px)`;
+            }, 50);
+        });
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.cta-button, .pricing-cta, .theme-toggle').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mobile menu toggle (for future implementation)
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                const navLinks = document.querySelector('.nav-links');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            if (konamiCode.length > 10) konamiCode.shift();
+            
+            if (konamiCode.toString() === konamiSequence.toString()) {
+                document.body.style.animation = 'rainbow 2s infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 5000);
+            }
+        });
+
+        const rainbowStyle = document.createElement('style');
+        rainbowStyle.textContent = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(rainbowStyle);
+
+
+          </script>
+</body>
+</html>
