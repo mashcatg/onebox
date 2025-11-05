@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneBox - Legal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #0a0a0a;
+            --card: #ffffff;
+            --card-foreground: #0a0a0a;
+            --primary: #5e17eb;
+            --primary-foreground: #ffffff;
+            --secondary: #f5f5f7;
+            --muted: #fafafa;
+            --muted-foreground: #6b7280;
+            --accent: #f3f4f6;
+            --border: #e5e7eb;
+            --font-sans: 'Plus Jakarta Sans', ui-sans-serif, sans-serif, system-ui;
+        }
+
+        .dark {
+            --background: #0a0a0a;
+            --foreground: #fafafa;
+            --card: #18181b;
+            --card-foreground: #fafafa;
+            --primary: #7c3aed;
+            --secondary: #1f1f23;
+            --muted: #18181b;
+            --muted-foreground: #9ca3af;
+            --accent: #27272a;
+            --border: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--background);
+            color: var(--foreground);
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .dark nav {
+            background: rgba(10, 10, 10, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--foreground);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+
+        .back-link {
+            padding: 0.65rem 1.5rem;
+            background: var(--secondary);
+            color: var(--foreground);
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .page-switcher {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--secondary);
+            padding: 0.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .page-switcher button {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-sans);
+        }
+
+        .page-switcher button.active {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .page-switcher button:hover:not(.active) {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--secondary);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--border);
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--foreground);
+        }
+
+        .last-updated {
+            color: var(--muted-foreground);
+            font-size: 1rem;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .legal-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .legal-section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .legal-section h2 i {
+            font-size: 1.5rem;
+        }
+
+        .legal-section h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem;
+            color: var(--foreground);
+        }
+
+        .legal-section p {
+            color: var(--muted-foreground);
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .legal-section ul, .legal-section ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.25rem;
+            color: var(--muted-foreground);
+        }
+
+        .legal-section li {
+            margin-bottom: 0.75rem;
+            line-height: 1.8;
+        }
+
+        .highlight-box {
+            background: var(--secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        footer {
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--muted-foreground);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-text {
+            color: var(--muted-foreground);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            .legal-section {
+                padding: 1.5rem;
+            }
+
+            .page-switcher {
+                order: -1;
+                width: 100%;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .page-switcher button {
+                flex: 1;
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-inbox"></i>
+                OneBox
+            </a>
+            <div class="page-switcher">
+                <button id="termsBtn" class="active">Terms & Conditions</button>
+                <button id="privacyBtn">Privacy Policy</button>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="#" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Terms and Conditions -->
+        <div id="termsContent" class="content active">
+            <div class="page-header">
+                <div class="page-badge">
+                    <i class="fas fa-file-contract"></i>
+                    Legal
+                </div>
+                <h1 class="page-title">Terms & Conditions</h1>
+                <p class="last-updated">Last Updated: November 4, 2024</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-handshake"></i>Agreement to Terms</h2>
+                <p>Welcome to OneBox. By accessing or using our email management service, you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, you may not access the service.</p>
+                <div class="highlight-box">
+                    <p><strong>Important:</strong> These terms constitute a legally binding agreement between you and OneBox. Please read them carefully.</p>
+                </div>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-user-circle"></i>Account Registration</h2>
+                <p>To use OneBox, you must create an account. You agree to:</p>
+                <ul>
+                    <li>Provide accurate, current, and complete information during registration</li>
+                    <li>Maintain and promptly update your account information</li>
+                    <li>Maintain the security of your password and account</li>
+                    <li>Accept responsibility for all activities under your account</li>
+                    <li>Notify us immediately of any unauthorized use of your account</li>
+                </ul>
+                <p>You must be at least 18 years old to create an account. By creating an account, you represent that you meet this age requirement.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-shield-alt"></i>Acceptable Use</h2>
+                <h3>You agree NOT to use OneBox to:</h3>
+                <ul>
+                    <li>Violate any applicable laws or regulations</li>
+                    <li>Send spam, unsolicited messages, or engage in phishing</li>
+                    <li>Distribute malware, viruses, or harmful code</li>
+                    <li>Harass, abuse, or harm another person</li>
+                    <li>Impersonate any person or entity</li>
+                    <li>Interfere with or disrupt the service or servers</li>
+                    <li>Attempt to gain unauthorized access to any systems</li>
+                    <li>Collect or store personal data about other users</li>
+                </ul>
+                <p>We reserve the right to investigate and terminate accounts that violate these terms.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-credit-card"></i>Subscription and Payments</h2>
+                <h3>Billing</h3>
+                <p>Paid subscriptions are billed in advance on a monthly or annual basis. By subscribing, you authorize us to charge your payment method.</p>
+                <h3>Automatic Renewal</h3>
+                <p>Your subscription will automatically renew unless you cancel before the renewal date. You can cancel anytime from your account settings.</p>
+                <h3>Refunds</h3>
+                <p>We offer a 14-day money-back guarantee for first-time subscribers. Refunds after this period are at our discretion. Free trial users are not eligible for refunds.</p>
+                <h3>Price Changes</h3>
+                <p>We may change subscription prices with 30 days' notice. Continued use after price changes constitutes acceptance of the new pricing.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-lock"></i>Intellectual Property</h2>
+                <p>The OneBox service, including its original content, features, and functionality, is owned by OneBox and protected by international copyright, trademark, and other intellectual property laws.</p>
+                <h3>Your Content</h3>
+                <p>You retain all rights to the emails and content you store in OneBox. By using our service, you grant us a limited license to store, process, and display your content solely to provide the service.</p>
+                <h3>Restrictions</h3>
+                <p>You may not copy, modify, distribute, sell, or lease any part of our services without explicit written permission.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-ban"></i>Service Termination</h2>
+                <h3>By You</h3>
+                <p>You may terminate your account at any time from account settings. Upon termination, your right to use the service ceases immediately.</p>
+                <h3>By Us</h3>
+                <p>We may terminate or suspend your account immediately, without prior notice, if you breach these Terms. We may also terminate inactive accounts after 12 months of inactivity.</p>
+                <h3>Effect of Termination</h3>
+                <p>After termination, you have 30 days to export your data. After this period, your data may be permanently deleted.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-exclamation-triangle"></i>Disclaimers and Limitations</h2>
+                <h3>Service "As Is"</h3>
+                <p>OneBox is provided "as is" without warranties of any kind, either express or implied. We do not guarantee that the service will be uninterrupted, secure, or error-free.</p>
+                <h3>Limitation of Liability</h3>
+                <p>To the maximum extent permitted by law, OneBox shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or other intangible losses.</p>
+                <div class="highlight-box">
+                    <p><strong>Note:</strong> Some jurisdictions do not allow limitations on warranties or liability, so these limitations may not apply to you.</p>
+                </div>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-balance-scale"></i>Governing Law</h2>
+                <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction where OneBox is registered, without regard to its conflict of law provisions.</p>
+                <p>Any disputes arising from these Terms or use of the service shall be resolved through binding arbitration, except where prohibited by law.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-sync-alt"></i>Changes to Terms</h2>
+                <p>We reserve the right to modify these Terms at any time. We will notify you of any changes by posting the new Terms on this page and updating the "Last Updated" date.</p>
+                <p>Your continued use of the service after changes constitutes acceptance of the modified Terms.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-envelope"></i>Contact Us</h2>
+                <p>If you have any questions about these Terms, please contact us:</p>
+                <ul>
+                    <li>Email: legal@tryonebox.com</li>
+                    <li>Address: OneBox Legal Department, teamennovat@gmail.com</li>
+                    <li>Support Portal: support.tryonebox.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Privacy Policy -->
+        <div id="privacyContent" class="content">
+            <div class="page-header">
+                <div class="page-badge">
+                    <i class="fas fa-user-shield"></i>
+                    Legal
+                </div>
+                <h1 class="page-title">Privacy Policy</h1>
+                <p class="last-updated">Last Updated: November 4, 2024</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-info-circle"></i>Introduction</h2>
+                <p>At OneBox, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our email management service.</p>
+                <div class="highlight-box">
+                    <p><strong>Our Commitment:</strong> We use a zero-knowledge architecture, meaning we cannot access your email content. Your data is encrypted end-to-end.</p>
+                </div>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-database"></i>Information We Collect</h2>
+                <h3>Information You Provide</h3>
+                <ul>
+                    <li><strong>Account Information:</strong> Name, email address, password (encrypted)</li>
+                    <li><strong>Payment Information:</strong> Billing address and payment method details (processed by third-party payment processors)</li>
+                    <li><strong>Email Account Credentials:</strong> OAuth tokens to access your connected email accounts</li>
+                    <li><strong>Support Communications:</strong> Messages you send to our support team</li>
+                </ul>
+
+                <h3>Automatically Collected Information</h3>
+                <ul>
+                    <li><strong>Usage Data:</strong> Features used, pages visited, time spent, interactions</li>
+                    <li><strong>Device Information:</strong> Device type, operating system, browser type</li>
+                    <li><strong>Log Data:</strong> IP address, access times, error logs</li>
+                    <li><strong>Cookies:</strong> Session data and preferences</li>
+                </ul>
+
+                <h3>Email Metadata</h3>
+                <p>We process email metadata (sender, recipient, subject lines, timestamps) to provide our service features like sorting and filtering. Email content remains encrypted and inaccessible to us.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-cogs"></i>How We Use Your Information</h2>
+                <p>We use the collected information to:</p>
+                <ul>
+                    <li>Provide, maintain, and improve our services</li>
+                    <li>Process transactions and send related information</li>
+                    <li>Send administrative information, updates, and security alerts</li>
+                    <li>Respond to your comments and questions</li>
+                    <li>Monitor and analyze usage patterns and trends</li>
+                    <li>Detect, prevent, and address technical issues</li>
+                    <li>Develop new features and services</li>
+                    <li>Send marketing communications (with your consent)</li>
+                </ul>
+                <p>We use AI and machine learning to improve email sorting and filtering, but this processing happens on encrypted metadata only.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-share-alt"></i>Information Sharing</h2>
+                <h3>We share your information only in these circumstances:</h3>
+                <ul>
+                    <li><strong>With Your Consent:</strong> When you explicitly authorize us to share information</li>
+                    <li><strong>Service Providers:</strong> Third parties who perform services on our behalf (hosting, analytics, payment processing)</li>
+                    <li><strong>Legal Requirements:</strong> When required by law, court order, or government request</li>
+                    <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+                    <li><strong>Protection of Rights:</strong> To protect our rights, property, or safety and that of our users</li>
+                </ul>
+                <div class="highlight-box">
+                    <p><strong>Important:</strong> We never sell your personal information to third parties for marketing purposes.</p>
+                </div>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-lock"></i>Data Security</h2>
+                <p>We implement industry-standard security measures to protect your information:</p>
+                <ul>
+                    <li><strong>Encryption:</strong> AES-256 encryption for data at rest and in transit</li>
+                    <li><strong>Zero-Knowledge Architecture:</strong> Email content is encrypted with your keys</li>
+                    <li><strong>Secure Infrastructure:</strong> SOC 2 compliant data centers</li>
+                    <li><strong>Access Controls:</strong> Strict employee access policies and monitoring</li>
+                    <li><strong>Regular Audits:</strong> Third-party security assessments and penetration testing</li>
+                    <li><strong>Two-Factor Authentication:</strong> Optional 2FA for enhanced account security</li>
+                </ul>
+                <p>While we strive to protect your information, no security system is impenetrable. We cannot guarantee absolute security.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-cookie-bite"></i>Cookies and Tracking</h2>
+                <h3>We use cookies and similar technologies for:</h3>
+                <ul>
+                    <li><strong>Essential Cookies:</strong> Required for basic functionality (sessions, authentication)</li>
+                    <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
+                    <li><strong>Analytics Cookies:</strong> Understand how you use our service</li>
+                    <li><strong>Marketing Cookies:</strong> Deliver relevant advertisements (with consent)</li>
+                </ul>
+                <p>You can control cookie preferences through your browser settings. Note that disabling cookies may limit functionality.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-user-check"></i>Your Privacy Rights</h2>
+                <p>Depending on your location, you may have the following rights:</p>
+                <ul>
+                    <li><strong>Access:</strong> Request a copy of your personal information</li>
+                    <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                    <li><strong>Deletion:</strong> Request deletion of your personal information</li>
+                    <li><strong>Portability:</strong> Export your data in a machine-readable format</li>
+                    <li><strong>Objection:</strong> Object to certain processing of your information</li>
+                    <li><strong>Withdrawal:</strong> Withdraw consent for data processing</li>
+                    <li><strong>Complaint:</strong> Lodge a complaint with your data protection authority</li>
+                </ul>
+                <p>To exercise these rights, contact us at privacy@tryonebox.com. We will respond within 30 days.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-clock"></i>Data Retention</h2>
+                <p>We retain your information for as long as necessary to provide services and comply with legal obligations:</p>
+                <ul>
+                    <li><strong>Active Accounts:</strong> Data retained while account is active</li>
+                    <li><strong>Inactive Accounts:</strong> Data deleted after 12 months of inactivity</li>
+                    <li><strong>Deleted Accounts:</strong> Data permanently deleted after 30-day recovery period</li>
+                    <li><strong>Legal Requirements:</strong> Some data retained longer for legal compliance</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-child"></i>Children's Privacy</h2>
+                <p>OneBox is not intended for users under 18 years of age. We do not knowingly collect information from children. If you believe we have inadvertently collected information from a child, please contact us immediately.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-globe"></i>International Data Transfers</h2>
+                <p>Your information may be transferred to and processed in countries other than your own. These countries may have different data protection laws. We ensure appropriate safeguards are in place:</p>
+                <ul>
+                    <li>Standard Contractual Clauses approved by the European Commission</li>
+                    <li>Data Processing Agreements with all service providers</li>
+                    <li>Compliance with Privacy Shield principles (where applicable)</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-link"></i>Third-Party Services</h2>
+                <p>OneBox integrates with third-party email providers (Gmail, Outlook, Yahoo, etc.). These services have their own privacy policies, which we encourage you to review.</p>
+                <p>We are not responsible for the privacy practices of third-party services. Links to external sites are provided for convenience only.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-bell"></i>Marketing Communications</h2>
+                <p>With your consent, we may send promotional emails about new features, updates, and offers. You can opt out anytime by:</p>
+                <ul>
+                    <li>Clicking the "Unsubscribe" link in any marketing email</li>
+                    <li>Updating preferences in your account settings</li>
+                    <li>Contacting us at privacy@tryonebox.com</li>
+                </ul>
+                <p>Note: You cannot opt out of essential service communications (security alerts, billing notices, etc.)</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-edit"></i>Changes to Privacy Policy</h2>
+                <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by:</p>
+                <ul>
+                    <li>Posting the updated policy on this page</li>
+                    <li>Updating the "Last Updated" date</li>
+                    <li>Sending an email notification for material changes</li>
+                </ul>
+                <p>Your continued use after changes indicates acceptance of the updated policy.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-map-marker-alt"></i>Regional Privacy Information</h2>
+                <h3>For California Residents (CCPA)</h3>
+                <p>California residents have additional rights under the California Consumer Privacy Act, including the right to know what personal information is collected and request deletion.</p>
+                <h3>For EU/UK Residents (GDPR)</h3>
+                <p>EU and UK residents have rights under GDPR, including data portability, right to erasure, and the right to lodge complaints with supervisory authorities.</p>
+            </div>
+
+            <div class="legal-section">
+                <h2><i class="fas fa-envelope"></i>Contact Us</h2>
+                <p>For privacy-related questions or to exercise your rights, contact us:</p>
+                <ul>
+                    <li><strong>Email:</strong> privacy@tryonebox.com</li>
+                    <li><strong>Data Protection Officer:</strong> dpo@tryonebox.com</li>
+                    <li><strong>Address:</strong> OneBox Privacy Team, teamennovat@gmail.com</li>
+                    <li><strong>Support Portal:</strong> support.tryonebox.com/privacy</li>
+                </ul>
+                <p>We aim to respond to all requests within 30 days.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Security</a>
+                <a href="#">Contact</a>
+            </div>
+            <p class="footer-text">&copy; 2024 OneBox. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            html.classList.add('dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Page Switcher
+        const termsBtn = document.getElementById('termsBtn');
+        const privacyBtn = document.getElementById('privacyBtn');
+        const termsContent = document.getElementById('termsContent');
+        const privacyContent = document.getElementById('privacyContent');
+
+        termsBtn.addEventListener('click', () => {
+            termsBtn.classList.add('active');
+            privacyBtn.classList.remove('active');
+            termsContent.classList.add('active');
+            privacyContent.classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        privacyBtn.addEventListener('click', () => {
+            privacyBtn.classList.add('active');
+            termsBtn.classList.remove('active');
+            privacyContent.classList.add('active');
+            termsContent.classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    const navHeight = document.querySelector('nav').offsetHeight;
+                    const targetPosition = target.offsetTop - navHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Fade in sections on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.legal-section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Page load animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+    </script>
+</body>
+</html>
